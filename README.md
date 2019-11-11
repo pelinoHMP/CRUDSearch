@@ -1,2 +1,2 @@
 # mongooseDB
-Partner with Geneva Rivas
+To be presented in Architecture of Information System
