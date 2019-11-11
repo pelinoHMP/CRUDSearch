@@ -40,7 +40,4 @@ module.exports = function (app) {
 	app.post('/item/update', (req, res) => {
 		users.update(res, req.body);
 	});
-	app.get('/item/retreive:',(req,res)=>{
-		users.search(req.query.search);
-	});
 }

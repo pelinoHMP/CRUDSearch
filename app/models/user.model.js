@@ -9,5 +9,5 @@ const UserSchema = mongoose.Schema({
     quan: Number,
     prio:Number
 });
- 
+
 module.exports = mongoose.model('items', UserSchema);

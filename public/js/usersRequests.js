@@ -37,6 +37,9 @@ $(document).ready(function () {
         $(tr).append(
             $("<td>", {
                 class: "forName"
+            }).text(item._id),
+            $("<td>", {
+                class: "forName"
             }).text(item.name),
             $("<td>", {
                 class: "forQuan"
@@ -123,28 +126,30 @@ $(document).ready(function () {
 
         }
     })
-    // $('#btnSearch').click(function(){
-    //     var dataSearch= $('#searchItem').val();
-    //     $.ajax({
-    //         url: '/item/retrieve/'+ id,
-    //         crossDomain: true,
-    //         type:'GET',
-    //         data : dataSearch,
-    //         success:function (result){
-    //             addRow(result)
-    //             console.log('Search Item: ' + result)                
-    //         },error:function(){
-    //             console.log('Error!!!!')
-    //         }
-    //     })
-    // })
+
+    function retrieveSearchItem(id) {
+        $.ajax({
+            url: "item/retrieve/" + id,
+            crossDomain: true,
+            success: function (data) {
+                console.log('Name: '+data.name);
+                console.log(data.prio);                
+                addRow(data)
+            },
+            error: function (e) {
+                console.log(e);
+            }
+        })
+    }
+
 
     $("#btnSearch").click(function (e) {
         var name = $('#searchItem').val()
-        retrieveItems(name)
-        addRow(name)
-        console.log(name)
+        $('tbody').empty();
+        retrieveSearchItem(name)
     })
+
+
 
     $(document).on("click", ".del", function () {
         var formData = {

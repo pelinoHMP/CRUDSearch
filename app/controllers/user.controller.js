@@ -28,6 +28,7 @@ exports.findAll = (res) => {
         }
     });
 };
+
 exports.findOne = (res, id) => {
     var res = res;
     User.findById(id, function (err, items) {
@@ -37,18 +38,34 @@ exports.findOne = (res, id) => {
             res.json(items);
         }
     });
+    User.find
 };
+
+exports.searchOne = (req, res) => {
+    if (req.query.search) {
+        User.find({"name": req.query.search}, function(err, foundItem){
+        if(err){
+            console.log(err);
+        } else {
+            console.log(foundItem)
+           res.render(foundItem);
+        }
+     }); 
+     }
+};
+
 exports.delete = (req, res) => {
     User.findByIdAndRemove({ _id: req.params.id }, (err, doc) => {
         if (!err) {
             console.log('deleted..')
         } else {
             console.log('Success')
-            //             added response -yol
+//             added response -yol
             res.send("deleted");
         }
     });
 }
+
 exports.update = (res, alldata) => {
     // Find note and update it with the request body
     User.findByIdAndUpdate(alldata.id, alldata.newData, { new: true })
@@ -72,22 +89,4 @@ exports.update = (res, alldata) => {
                 message: "Error updating note with id " + alldata.id
             });
         });
-};
-// exports.search = (req,res) => {
-//     var res = res;
-//     User.findById({
-//         _search: req.params.dataSearch,
-//     }).then(products => console.log(products))
-//         console.log('Ariel')
-//         .catch(e => console.error(e));
-// };
-exports.search = (res, id) => {
-    var res = res;
-    User.findById(id, function (err, items) {
-        if (err) {
-            res.json(err);
-        } else {
-            res.json(items);
-        }
-    });
 };
