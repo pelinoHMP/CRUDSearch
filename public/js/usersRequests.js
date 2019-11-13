@@ -37,9 +37,6 @@ $(document).ready(function () {
         $(tr).append(
             $("<td>", {
                 class: "forName"
-            }).text(item._id),
-            $("<td>", {
-                class: "forName"
             }).text(item.name),
             $("<td>", {
                 class: "forQuan"
