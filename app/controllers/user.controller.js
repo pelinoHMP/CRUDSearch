@@ -41,18 +41,17 @@ exports.findOne = (res, id) => {
     User.find
 };
 
-exports.searchOne = (req, res) => {
-    if (req.query.search) {
-        User.find({"name": req.query.search}, function(err, foundItem){
-        if(err){
-            console.log(err);
-        } else {
-            console.log(foundItem)
-           res.render(foundItem);
-        }
-     }); 
-     }
-};
+// exports.searchOne = (res, brandname) => {
+//     var res = res;
+//     User.find({ brand: { $regex: new RegExp(brandname, "i") } }, function (err, items) {
+//         if (err) {
+//             res.json(err);
+//         } else {
+//             res.json(items);
+//         }
+//     });
+// };
+
 
 exports.delete = (req, res) => {
     User.findByIdAndRemove({ _id: req.params.id }, (err, doc) => {
@@ -60,7 +59,7 @@ exports.delete = (req, res) => {
             console.log('deleted..')
         } else {
             console.log('Success')
-//             added response -yol
+            //             added response -yol
             res.send("deleted");
         }
     });

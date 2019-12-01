@@ -21,7 +21,8 @@ $(document).ready(function () {
             id: item._id,
             name: item.name,
             quan: item.quan,
-            prio: item.prio
+            prio: item.prio,
+            price: item.price
         });
         var btns = $("<div>").append($("<button>", {
             class: "btn btn-primary update btn-sm up",
@@ -44,12 +45,33 @@ $(document).ready(function () {
             $("<td>", {
                 class: "forPrio"
             }).text(item.prio),
+             $("<td>", {
+                class: "forPrice"
+            }).text(item.price),
             $("<td>").append(btns)
         ).appendTo($('tbody'))
     }
 
     $(document).on("click", ".del", function () {
-        $(this).parent().parent().parent().fadeOut("slow")
+        Swal.fire({
+            title: 'Are you sure to delete this item?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.value) {
+                $(this).parent().parent().parent().fadeOut();
+                deleteItem($(this).parent().parent().parent().attr("id"));
+                Swal.fire(
+                    'Deleted!',
+                    'Student has been deleted.',
+                    'success'
+                )
+            }
+        })
     })
 
     $("#btnAdd").click(function () {
@@ -83,13 +105,23 @@ $(document).ready(function () {
                     timer: 1000
                 })
 
+            }else if (!$("#price").val()) {
+                valid = false;
+                Swal.fire({
+                    type: 'error',
+                    title: 'Price should be filled!!',
+                    showConfirmButton: false,
+                    timer: 1000
+                })
+
             }
         })
         if (valid) {
             var formData = {
                 name: $("#name").val(),
                 quan: $("#quantity").val(),
-                prio: $("#priority").val()
+                prio: $("#priority").val(),
+                price:$("#price").val()
             }
 
             $.ajax({
@@ -106,6 +138,7 @@ $(document).ready(function () {
                         showConfirmButton: false,
                         timer: 1500,
                     })
+                    $('#squarespaceModal').hide()
 
                     addRow(result)
                     $('input').val("")
@@ -124,35 +157,60 @@ $(document).ready(function () {
         }
     })
 
-    function retrieveSearchItem(id) {
-        $.ajax({
-            url: "item/retrieve/" + id,
-            crossDomain: true,
-            success: function (data) {
-                console.log('Name: '+data.name);
-                console.log(data.prio);                
-                addRow(data)
-            },
-            error: function (e) {
-                console.log(e);
-            }
-        })
-    }
+    // function retrieveSearchItem(id) {
+    //     $.ajax({
+    //         url: "item/retrieve/" + id,
+    //         crossDomain: true,
+    //         success: function (data) {
+    //             console.log('Name: ' + data.name);
+    //             console.log(data.prio);
+    //             addRow(data)
+    //         },
+    //         error: function (e) {
+    //             console.log(e);
+    //         }
+    //     })
+    // }
 
+    // $("#btnSearch").click(function () {
+    //     var updateBrand = $("#searchItem").val();
+    //     searchedItem(updateBrand);
+    //     $("#searchItem").val("");
+    // })
 
-    $("#btnSearch").click(function (e) {
-        var name = $('#searchItem').val()
-        $('tbody').empty();
-        retrieveSearchItem(name)
-    })
-
+    // function searchedItem(name) {
+    //     $.ajax({
+    //         url: "item/search/" + name,
+    //         type: "put",
+    //         crossDomain: true,
+    //         success: function (data) {
+    //             if (data.length != 0) {
+    //                 $("tbody").empty();
+    //                 data.forEach(items => {
+    //                     addRow(items)
+    //                 })
+    //             } else {
+    //                 Swal.fire({
+    //                     type: 'error',
+    //                     title: 'Item not found!!!',
+    //                     showConfirmButton: false,
+    //                     timer: 1000
+    //                 })
+    //             }
+    //         },
+    //         error: function (e) {
+    //             console.log(e);
+    //         }
+    //     })
+    // }
 
 
     $(document).on("click", ".del", function () {
         var formData = {
             name: $("#name").val(),
             quan: $("#quantity").val(),
-            prio: $("#priority").val()
+            prio: $("#priority").val(),
+            price:$('#price').val()
         }
         var id = $(this).attr('id').split('_')
         $.ajax({
@@ -180,7 +238,8 @@ $(document).ready(function () {
         var data = {
             "name": $('#updateName').val(),
             "quan": $('#updateQuan').val(),
-            "prio": $('#updatePrio').val()
+            "prio": $('#updatePrio').val(),
+            "price":$('updatePrice').val()
         }
         updateItem(key, data)
     })
@@ -199,6 +258,15 @@ $(document).ready(function () {
                 $('#' + data._id + " td.forName").text(data.name)
                 $('#' + data._id + " td.forQuan").text(data.quan)
                 $('#' + data._id + " td.forPrio").text(data.prio)
+                $('#' + data._id + " td.forPrice").text(data.price)
+                Swal.fire({
+                    type: 'success',
+                    title: 'Successfully Updated!',
+                    text: 'Item has been updated!!!',
+                    showConfirmButton: false,
+                    timer: 1500,
+                })
+                $('#exampleModal').hide()
             },
             error: function (e) {
                 Swal.fire({
@@ -221,6 +289,7 @@ $(document).ready(function () {
                 $('#updateName').val(data.name);
                 $('#updateQuan').val(data.quan);
                 $('#updatePrio').val(data.prio);
+                $('#updatePrice').val(data.price);
                 $("#btnUpdated").attr("key", data._id)
             },
             error: function (e) {

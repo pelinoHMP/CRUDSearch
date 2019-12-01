@@ -4,7 +4,7 @@
   "description": "building a NodeJS/Express web-app to POST/GET data from MongDB via Mongoose - Ajax JQuery + Bootstrap view",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+      "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
     "NodeJS",

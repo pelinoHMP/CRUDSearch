@@ -7,6 +7,7 @@ const UserSchema = mongoose.Schema({
         unique: true
     },
     quan: Number,
-    prio: Number
+    prio: Number,
+    price: Number
 });
 module.exports = mongoose.model('items', UserSchema)
