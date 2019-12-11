@@ -45,35 +45,12 @@ $(document).ready(function () {
             $("<td>", {
                 class: "forPrio"
             }).text(item.prio),
-             $("<td>", {
+            $("<td>", {
                 class: "forPrice"
             }).text(item.price),
             $("<td>").append(btns)
         ).appendTo($('tbody'))
     }
-
-    $(document).on("click", ".del", function () {
-        Swal.fire({
-            title: 'Are you sure to delete this item?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.value) {
-                $(this).parent().parent().parent().fadeOut();
-                deleteItem($(this).parent().parent().parent().attr("id"));
-                Swal.fire(
-                    'Deleted!',
-                    'Student has been deleted.',
-                    'success'
-                )
-            }
-        })
-    })
-
     $("#btnAdd").click(function () {
         var validName = $('#name').val();
         var validNumber = $('#quantity').val()
@@ -105,7 +82,7 @@ $(document).ready(function () {
                     timer: 1000
                 })
 
-            }else if (!$("#price").val()) {
+            } else if (!$("#price").val()) {
                 valid = false;
                 Swal.fire({
                     type: 'error',
@@ -121,7 +98,7 @@ $(document).ready(function () {
                 name: $("#name").val(),
                 quan: $("#quantity").val(),
                 prio: $("#priority").val(),
-                price:$("#price").val()
+                price: $("#price").val()
             }
 
             $.ajax({
@@ -157,74 +134,47 @@ $(document).ready(function () {
         }
     })
 
-    // function retrieveSearchItem(id) {
-    //     $.ajax({
-    //         url: "item/retrieve/" + id,
-    //         crossDomain: true,
-    //         success: function (data) {
-    //             console.log('Name: ' + data.name);
-    //             console.log(data.prio);
-    //             addRow(data)
-    //         },
-    //         error: function (e) {
-    //             console.log(e);
-    //         }
-    //     })
-    // }
-
-    // $("#btnSearch").click(function () {
-    //     var updateBrand = $("#searchItem").val();
-    //     searchedItem(updateBrand);
-    //     $("#searchItem").val("");
-    // })
-
-    // function searchedItem(name) {
-    //     $.ajax({
-    //         url: "item/search/" + name,
-    //         type: "put",
-    //         crossDomain: true,
-    //         success: function (data) {
-    //             if (data.length != 0) {
-    //                 $("tbody").empty();
-    //                 data.forEach(items => {
-    //                     addRow(items)
-    //                 })
-    //             } else {
-    //                 Swal.fire({
-    //                     type: 'error',
-    //                     title: 'Item not found!!!',
-    //                     showConfirmButton: false,
-    //                     timer: 1000
-    //                 })
-    //             }
-    //         },
-    //         error: function (e) {
-    //             console.log(e);
-    //         }
-    //     })
-    // }
-
 
     $(document).on("click", ".del", function () {
-        var formData = {
-            name: $("#name").val(),
-            quan: $("#quantity").val(),
-            prio: $("#priority").val(),
-            price:$('#price').val()
-        }
-        var id = $(this).attr('id').split('_')
-        $.ajax({
-            url: "/item/delete/" + id[1],
-            crossDomain: true,
-            data: formData,
-            success: function (result) {
-                console.log('Success!!')
-                console.log(data);
-            },
-            error: function (e) {
-                console.log("ERROR: ", e);
-            }
-        });
+        swal({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                    swal("Poof! Your imaginary file has been deleted!", {
+                        icon: "success",
+                    });
+
+                    var formData = {
+                        name: $("#name").val(),
+                        quan: $("#quantity").val(),
+                        prio: $("#priority").val(),
+                        price: $('#price').val()
+                    }
+                    var id = $(this).attr('id').split('_')
+                    $.ajax({
+                        url: "/item/delete/" + id[1],
+                        crossDomain: true,
+                        data: formData,
+                        success: function (result) {
+                            console.log('Success!!')
+                            console.log(data);
+                        },
+                        error: function (e) {
+                            console.log("ERROR: ", e);
+                        }
+                    });
+                    window.location.reload(true)
+
+                } else {
+                    swal("Your item is safe!");
+                }
+            });
+
     })
 
     $(document).on("click", ".update", function () {
@@ -239,7 +189,7 @@ $(document).ready(function () {
             "name": $('#updateName').val(),
             "quan": $('#updateQuan').val(),
             "prio": $('#updatePrio').val(),
-            "price":$('updatePrice').val()
+            "price": $('updatePrice').val()
         }
         updateItem(key, data)
     })
